@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <iostream>
+#include <QDebug>
 
 using namespace std;
 
@@ -16,38 +17,37 @@ void ReadFromFile(const char* filename)
     f.close();
 }
 
-void WriteToFile(const char* fileout, int ar[])
+char binNumb[32];
+void WriteToFile(const char* fileout)
 {
     QFile f(fileout);
     f.open(QIODevice::WriteOnly);
 
-    for(int i = 0; i < 256; i++)
+    for(int i = 0; i < 32; i++)
     {
-        if(ar[i] != 0)
-        {
-            char sim = i;
-            QTextStream writeStream(&f);
-            writeStream << sim << " : " << ar[i] << "\n";
-        }
+        QTextStream writeStream(&f);
+        writeStream << binNumb[i];
+    }
+    f.close();
+}
+
+
+void perevod(int numDecimal) {
+    memset(binNumb, 0x00, 32 * sizeof(char));
+
+    for (int i = 0; i < 32; i++) {
+        binNumb[i] = ((numDecimal & 1 << i)) ? 0x31 : 0x30;
     }
 }
 
-void task1(const char* filename, const char* fileout)
-{
-    ReadFromFile(filename);
-
-    int ar[256];
-    memset(&ar, 0x00, sizeof(int)*256);
-
-    for(int i = 0; i < filedata.size();i++)
-    {
-        ar[filedata[i]]++;
-    }
-    WriteToFile(fileout, ar);
+void task2(int Num) {
+    perevod(Num);
+    WriteToFile("result.txt");
 }
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    task1("data.txt", "result.txt");
+    task2(8);
     return a.exec();
 }
