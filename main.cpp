@@ -43,53 +43,67 @@ class LinkedList
         bool Swap(int ID1, int ID2);
         void resetCurNode();
         int listLen();
+        int task_7(int n, Data _d);
 };
 
-Data LinkedList::pop_back()
-{
-    if(TAIL!=nullptr) //Иначе len = 0 и цикл for в main не начнет выполняться.
-    {
-        Node* temp = TAIL->prev;
-        Data tempd = TAIL->d;
-        temp->next = nullptr;
-        delete TAIL;
-        len--;
-        return tempd;
-    }
-}
 
-int task_6()
+int LinkedList::task_7(int n, Data _d)
 {
-    LinkedList MyList;
-    QFile f("LinkedListData.txt");
-    f.open(QIODevice::ReadWrite);
-    Data ThisData;
-    int z = MyList.listLen();
-    if(z==0)
+    if(n==0)
+    {
+        Node* temp = new Node;
+        temp->d = HEAD->d;
+        temp->next = HEAD->next;
+        temp->prev = HEAD;
+        HEAD->d = _d;
+        HEAD->next = temp;
+        len++;
+        return 0;
+    }
+    if(n==len-1)
+    {
+        Node* temp = new Node;
+        temp->d = TAIL->d;
+        temp->prev = TAIL->prev;
+        temp->next = TAIL;
+        TAIL->d = _d;
+        TAIL->prev = temp;
+        len++;
+        return 0;
+    }
+    if(n>=len)
     {
         return -1;
     }
-    for(int i = 0; i < z;i++)
+    if(n==1)
     {
-        ThisData = MyList.pop_back();
-        QTextStream writeStream(&f);
-        writeStream << "1. " << ThisData.num << " " << ThisData.sim << "\n";
+        Node* temp = new Node;
+        temp->d = _d;
+        temp->prev = HEAD;
+        HEAD->next->prev = temp;
+        temp->next = HEAD->next;
+        HEAD->next = temp;
     }
-    f.close();
+
+    Node* prev = HEAD;
+    Node* it = HEAD->next;
+    for(int i = 2; i < n; i++)
+    {
+        prev = prev->next;
+        it = it->next;
+    }
+
+    Node* temp = new Node;
+    temp->d = _d;
+    temp->prev = prev;
+    temp->next = it;
+    it->prev = temp;
+    prev->next = temp;
     return 0;
 }
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    int m = task_6();
-    if(m == -1)
-    {
-        cout << "Список пуст." << endl;
-    }
-    else
-    {
-        cout << "Данные успешно записаны." << endl;
-    }
     return a.exec();
 }
