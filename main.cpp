@@ -8,102 +8,88 @@
 #include <QtGlobal>
 #include <stdio.h>
 #include <QList>
-#include <string.h>
-
 
 using namespace std;
-struct Data
+
+void task4(int H_of_elka)
 {
-    int num;
-    char sim;
-};
+    if(H_of_elka<=0)
+    {
+        cout << "takih elok ne bivaet." << endl;
+        return;
+    }
+    int max_yarus = 1;
+    int kolvoprob = 0;
+    for(int i = 0; i < H_of_elka; i++)
+    {
+        kolvoprob++;
+    }
 
-struct Node
+
+    for(int i = 0; i < H_of_elka;i++)
+    {
+        for(int i = 0; i<kolvoprob;i++)
+        {
+            cout << " ";
+        }
+        for(int i = 0; i < max_yarus; i++)
+        {
+            cout << "*";
+        }
+        kolvoprob--;
+        max_yarus += 2;
+        cout << endl;
+    }
+}
+double sred(int*mas, int m)
 {
-    Node *next;
-    Node *prev;
-    struct Data d;
-};
-
-class LinkedList
+    double rez = 0;
+    for(int i = 0; i < m; i++)
+    {
+        double temp = mas[i];
+        rez = rez + temp/m;
+    }
+    return rez;
+}
+QList<double> task5(int* mas, int m, int n)
 {
-    private:
-        Data d;
-        Node* HEAD;
-        Node* TAIL;
-        Node* curNode; // Текущий эл-т
-        int len;
-    public:
-        void push_back(const Data d);
-        struct Data pop_back();
-        struct Data pop_front();
-        void push_front(const Data&data);
-        Data nextNode();
-        bool search(int ID);
-        bool Swap(int ID1, int ID2);
-        void resetCurNode();
-        int listLen();
-        int task_7(int n, Data _d);
-};
-
-
-int LinkedList::task_7(int n, Data _d)
-{
-    if(n==0)
+    QList<double> rez;
+    rez.clear();
+    for(int i = 0; i < n; i++)
     {
-        Node* temp = new Node;
-        temp->d = HEAD->d;
-        temp->next = HEAD->next;
-        temp->prev = HEAD;
-        HEAD->d = _d;
-        HEAD->next = temp;
-        len++;
-        return 0;
+        double promrez;
+        promrez = sred(&mas[m*i], m);
+        rez.append(promrez);
     }
-    if(n==len-1)
-    {
-        Node* temp = new Node;
-        temp->d = TAIL->d;
-        temp->prev = TAIL->prev;
-        temp->next = TAIL;
-        TAIL->d = _d;
-        TAIL->prev = temp;
-        len++;
-        return 0;
-    }
-    if(n>=len)
-    {
-        return -1;
-    }
-    if(n==1)
-    {
-        Node* temp = new Node;
-        temp->d = _d;
-        temp->prev = HEAD;
-        HEAD->next->prev = temp;
-        temp->next = HEAD->next;
-        HEAD->next = temp;
-    }
-
-    Node* prev = HEAD;
-    Node* it = HEAD->next;
-    for(int i = 2; i < n; i++)
-    {
-        prev = prev->next;
-        it = it->next;
-    }
-
-    Node* temp = new Node;
-    temp->d = _d;
-    temp->prev = prev;
-    temp->next = it;
-    it->prev = temp;
-    prev->next = temp;
-    return 0;
+    return(rez);
 }
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
+
+    cout << "Test of task 4: " << endl;
+    cout << "Kakoi visoti elky mne sdelat?" << endl;
+    int n;
+    cin >> n;
+    task4(n);
+    cout << endl << endl << endl;
+
+
+    cout << "Test of task 5: " << endl;
+    int A[4][3] = {
+        {8, 2, 3},
+        {21, 24, 30},
+        {0, 0, 1},
+        {1, 2, 3}
+      };
+    QList<double> T = task5(*A, 3, 4);
+    for(int i = 0; i < T.length(); i++)
+    {
+        cout << "Average " << i+1 << ": " << T.at(i) << endl;
+    }
+
+    cout << endl << endl << endl;
     return a.exec();
 }
